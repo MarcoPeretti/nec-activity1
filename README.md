@@ -1,5 +1,20 @@
 # nec-activity1
 
+
+## 29.10.2025
+**Update:** Started the development of the backpropagation method.
+
+### Implemented
+- Minimmum functionality OK 
+- Weight and bias initialization values changed to range from -1 to 1
+- Notebook NeuralTest modified to try a fixed neural model and 5000 epochs
+
+###  To check / next steps
+- Layear creation quantity is fixed, next change will be to add a method to allow the user to define number of layers.
+- Verify calculations, specificly fro formulas 14 and 13 from the document [G]
+- Develope a feature to select and decide which activation function the user wants to apply.
+
+
 ## 26.10.2025
 **Update:** Created 'NeuralNet' class with initial structure of the neural network.  
 Backpropagation and forward propagation are not coded yet.

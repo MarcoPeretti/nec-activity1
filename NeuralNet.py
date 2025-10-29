@@ -66,11 +66,11 @@ class NeuralNet:
             n_in = n[l]
             n_out = n[l + 1]
 
-            # Here random numbers are assigned in weights and biases, the random values are between 0 and 1
-            # Bias is one value pero neuron, the number of wights depends on how manu neurons has the previous layer
+            # Bias is one value per neuron, the number of weights depends on how many neurons the previous layer has.
+            # Here random numbers are assigned in weights and biases, the random values are between -1 and 1.
 
-            self.w[l] = np.random.uniform(0, 1, (n_out, n_in))
-            self.theta[l] = np.random.uniform(0, 1, (n_out, 1))
+            self.w[l] = np.random.uniform(-1, 1, (n_out, n_in))
+            self.theta[l] = np.random.uniform(-1, 1, (n_out, 1))
 
             # Gradients and momentum are set to 0, this will be updated during the back propagation
 
@@ -88,7 +88,7 @@ class NeuralNet:
             print(f" Layer {l+1}: w{self.w[l].shape}, theta{self.theta[l].shape}")
 
     
-    # Activation of Sigmoid function (g) and its derivative (g') - Later we'll define additional activation functions - Check with the professor
+    # Declaration of Sigmoid function (g) and its derivative (g') - Later we'll define additional activation functions - Check with the professor
  
     def sigmoid(self, x):
         """Sigmoid activation: g(x) = 1 / (1 + e^{-x})"""
@@ -107,36 +107,113 @@ class NeuralNet:
         Perform forward propagation in the network.
         Stores the activations (xi) and fields (h) in corresponding lists.
         """
-        # Convert input into a column vector
-        self.xi[0] = x.reshape(-1, 1)
+        #Input to the vector with activation of the first layer and we use reshape to calculate the rows using one column
 
-        # Loop through all layers (except input)
-        for l in range(1, self.L):
-            # h^(l) = w^(l) * xi^(l-1) - theta^(l)
-            self.h[l] = np.dot(self.w[l - 1], self.xi[l - 1]) - self.theta[l - 1]
+        self.xi[0] = x.reshape(-1, 1)   
 
-            # ξ^(l) = g(h^(l))  using sigmoid
-            self.xi[l] = self.sigmoid(self.h[l])
+        #Loop over the layers but avoiding first layer (input)
 
-        # The last activation is the network output
-        return self.xi[-1]
+        for l in range(1, self.L):  
+
+            #calculation of fields H following the formula n°8 from document [G]  (h^(l) = w^(l) * xi^(l-1) - theta^(l))
+
+            self.h[l] = np.dot(self.w[l - 1], self.xi[l - 1]) - self.theta[l - 1] 
+            
+            #Applying and storing the results from the activation function, in this case is sigmoid. Function n°10 from document [G]  g(h)= 1/1+e^-h'
+
+            self.xi[l] = self.sigmoid(self.h[l]) 
+
+        # The last activation showed is the output layer
+
+        return self.xi[-1]  
 
    
-    # Backpropagation - only skeleton for now, detailing calculations based on document 
 
-    def backpropagation(self, x, y):
+    
+
+        # ----------------------------------------------------------
+    # Backpropagation - Full implementation (Online with momentum)
+    # ----------------------------------------------------------
+    def backpropagation(self, x, y, eta=0.1, alpha=0.9):
         """
-        Skeleton of the backpropagation algorithm.
+        Perform one iteration (one pattern) of the Online Backpropagation algorithm.
+        
+        Based on equations (11), (12), (14) from the document [G].
+        
+        Parameters
+        ----------
+        x : np.ndarray
+            Input pattern (vector of shape (n_input,))
+        y : np.ndarray
+            Target output (vector of shape (n_output,))
+        eta : float
+            Learning rate (η) - controls how fast the weights are updated
+        alpha : float
+            Momentum (α) - helps smooth out oscillations in weight updates
+        """
+
        
-        """
-        # Step 1: Forward pass
+        # 1. Feed Forward
+       
+        # Compute network output for this pattern and store all activations (xi) and fields (h)
         output = self.forward(x)
 
-        print("[Backpropagation skeleton] - TEST")
-   
+       
+        # 2. Delta Calculation of initial output vs. desired output  (Eq. 11)
+        
+      
+        # We calculate the difference (delta) between the output from the epoch vs. the desired output. This calculation is based on formula n°11:  D^(L) = g'(h^(L)) * (o^(L) - z)
+        # For this case, it's necesary to use the derivative of the sigmoid function theat we previously deeclared as sigmoid_derivative
+        # Next step we need to check how to make dinamic the calculation of the layer, now is set as L - 1
+        # Variable name should be y or z?
 
-        # Return the current output so we can see predictions
-        return output
+        self.delta[self.L - 1] = self.sigmoid_derivative(self.h[self.L - 1]) * (self.xi[self.L - 1] - y.reshape(-1, 1))
+
+       
+        # 3. Execution of the delta propagation through all the layers in reversed order
+        
+        # We need to define in which layer we start
+        # The backwards propagation is done following the formula n°12 D^(l-1) = g'(h^(l-1)) * (D^(l) + W^(l))
+        # Reversed loop: propagating deltas from last hidden layer back to the first hidden layer
+        # Each delta[l] tells how much each hidden neuron contributed to the final error.
+
+        
+        for l in reversed(range(1, self.L - 1)): 
+            
+            self.delta[l] = self.sigmoid_derivative(self.h[l]) * np.dot(self.w[l].T, self.delta[l + 1])
+
+       
+        # 4. Update of the weight and bias for all the neurons 
+       
+        for l in range(self.L - 1):
+            # Calculate the modificaction of the weight  with the momentum included
+            # Here we follow the formula n°14
+            self.d_w[l] = -eta * np.dot(self.delta[l + 1], self.xi[l].T) + alpha * self.d_w_prev[l]
+
+            # Calculate the modification of the bias or thresholds
+            # Here we follow the formula n°14
+            self.d_theta[l] = eta * self.delta[l + 1] + alpha * self.d_theta_prev[l]
+
+            # Updating here the weights and bias or thresholds 
+            # Here we follow the formula n°15
+            
+            self.w[l] += self.d_w[l]
+            self.theta[l] += self.d_theta[l]
+
+            # The changes are saved in  to use them in the next iteration
+           
+
+            self.d_w_prev[l] = self.d_w[l]
+            self.d_theta_prev[l] = self.d_theta[l]
+
+        
+        # 5️. Compute and return the error 
+        
+        # Mean Squared Error (MSE) for this pattern
+        error = 0.5 * np.sum((y.reshape(-1, 1) - output) ** 2)
+
+        return error
+
 
     
     # Prediction - skeleton for the prediction

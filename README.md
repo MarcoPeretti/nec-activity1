@@ -1,5 +1,17 @@
 # nec-activity1
 
+## 06.11.2025
+**Update:** Finished BP from scratch version. Added Multilinear y BP with Pytorch, still in review.
+
+### Implemented
+- BP From scratch has the possibility of selecting the activation function
+- Implemented the fit method
+- Added new notebook called A1_Test_Implementations for executing a simple example and check functionality
+
+###  To check / next steps
+- Verify scikit and pytorch implementation
+- Skeleton added from official documentation, still in review
+
 
 ## 29.10.2025
 **Update:** Started the development of the backpropagation method.

@@ -1,16 +1,18 @@
 # 🧠 Activity 1 — Prediction with Supervised Learning Models
+
 ## High-Level To-Do List (Sections 1 → 3.2)
 
 ---
 
 ### Part 1: Dataset Selection & Analysis
-- [ ] **Select a dataset** meeting mandatory criteria: 
+
+- [x] **Select a dataset** meeting mandatory criteria:
 - [ ] **Document dataset details**:
   - [ ] Link to dataset source/webpage.
   - [ ] Description of features and target variable.
 - [ ] **Perform preprocessing**:
-  - [ ] Handle missing values.
-  - [ ] Encode categorical variables.
+  - [x] Handle missing values.
+  - [x] Encode categorical variables.
   - [ ] Identify and treat outliers.
   - [ ] Normalize or transform variables (inputs/outputs as needed).
 - [ ] **Generate and save** preprocessed/normalized files for later use.
@@ -18,6 +20,7 @@
 ---
 
 ### Part 2: Implement Neural Networks
+
 - [ ] **Implement Back-propagation neural network from scratch**
 
 ---
@@ -25,6 +28,7 @@
 ### Part 3: Prediction and Comparison of Models
 
 #### 3.1 Hyperparameter Comparison and Selection
+
 - [ ] Explore ≥ 10 different **hyperparameter combinations**:
   - Number of layers
   - Layer structure
@@ -40,6 +44,7 @@
 - [ ] Write a **2–3 paragraph discussion** justifying chosen hyperparameters.
 
 #### 3.2 Model Result Comparison
+
 - [ ] Implement or use:
   - [ ] **Multiple Linear Regression (MLR-F)** from scikit-learn.
   - [ ] **Neural Network (BP-F)** using a library (TensorFlow/PyTorch/etc.).
@@ -51,7 +56,8 @@
 
 ---
 
-### ✅ Deliverables Summary
+### Deliverables Summary
+
 - [ ] PDF report with:
   - GitHub link
   - Dataset details & preprocessing explanation

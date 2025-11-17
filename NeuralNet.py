@@ -82,6 +82,14 @@ class NeuralNet:
         else:
             raise ValueError(f"Unknown activation function '{fact}'. Supported: sigmoid, relu, tanh, linear")
 
+        # 16 November 2025:
+        # For regression tasks we will keep using `fact` for hidden layers,
+        # but we explicitly define a linear activation for the output layer.
+        # This allows hidden layers to be non-linear (sigmoid/tanh/relu)
+        # while the output can represent any real-valued target (regression).
+        self.g_out = self.linear
+        self.g_out_deriv = self.linear_derivative
+
         # Weights and thresholds are randomly initialized
         for l in range(self.L - 1):
             n_in = n[l]
@@ -89,8 +97,16 @@ class NeuralNet:
 
             # Bias is one value per neuron, the number of weights depends on how many neurons the previous layer has.
             # Here random numbers are assigned in weights and biases, the random values are between -1 and 1.
-            self.w[l] = np.random.uniform(-1, 1, (n_out, n_in))
-            self.theta[l] = np.random.uniform(-1, 1, (n_out, 1))
+            # self.w[l] = np.random.uniform(-1, 1, (n_out, n_in))
+            # self.theta[l] = np.random.uniform(-1, 1, (n_out, 1))    - Initialization giving errors and overflow, modifiyng it to scale 0.1 - 16 November
+
+              # --- Stable initialization ---
+            scale = 0.1   # If this continues to crash, try the following: 0.05 o 0.01 si 
+            # 16 November 2025: smaller initialization range helps avoid exploding activations
+            # in early training (especially when using linear or tanh activations).
+
+            self.w[l] = np.random.uniform(-scale, scale, (n_out, n_in))
+            self.theta[l] = np.random.uniform(-scale, scale, (n_out, 1))
 
             # Gradients and momentum are set to 0, this will be updated during the back propagation
             self.d_w[l] = np.zeros((n_out, n_in))
@@ -152,7 +168,16 @@ class NeuralNet:
             # Each layer calculates its field using the activations of the previous one
             self.h[l] = np.dot(self.w[l - 1], self.xi[l - 1]) - self.theta[l - 1]
             # Apply activation function
-            self.xi[l] = self.g(self.h[l])  # uses selected activation
+            # 16 November 2025:
+            # Hidden layers use the selected non-linear activation (self.g),
+            # while the output layer uses a linear activation (self.g_out)
+            # to better fit real-valued regression targets.
+            if l == self.L - 1:
+                # Output layer: linear activation for regression
+                self.xi[l] = self.g_out(self.h[l])
+            else:
+                # Hidden layers: use selected activation (sigmoid, relu, tanh, linear)
+                self.xi[l] = self.g(self.h[l])  # uses selected activation
 
         # Output of the last layer
         return self.xi[-1]
@@ -173,7 +198,10 @@ class NeuralNet:
         output = self.forward(x)
 
         # Compute delta for the output layer (Eq. 11)
-        self.delta[self.L - 1] = self.g_deriv(self.h[self.L - 1]) * (self.xi[self.L - 1] - z.reshape(-1, 1))
+        # 16 November 2025:
+        # For regression we assume a linear output layer, so we use g_out_deriv
+        # instead of the hidden activation derivative (self.g_deriv).
+        self.delta[self.L - 1] = self.g_out_deriv(self.h[self.L - 1]) * (self.xi[self.L - 1] - z.reshape(-1, 1))
 
         # Backward propagation of deltas through hidden layers (Eq. 12)
         for l in reversed(range(1, self.L - 1)):

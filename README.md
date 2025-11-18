@@ -1,5 +1,14 @@
 # nec-activity1
 
+## 18.11.2025
+
+**Update:** Created new folder structure. data - models - notebook
+
+- Under notebooks there are three documents:
+    1. Pre processing
+    2. Execution of hte BP from scratch
+    3. Execution of BP PyTorch and MLR
+    Disclaimer: Part of the pre process, such as scaling is repeated on the three notebooks. We plan to do a future refactor where we can reuse the scaled data in roder to repeat that part of the process on each execution.
 
 
 # Neural Network Debugging & Improvement Log
@@ -92,8 +101,6 @@ Huge improvement from previous MSE ~14.
     3. missing target scaling.
 - After fixes, MLP now learns and generalizes correctly.
 - Ready for hyperparameter experiments and reporting.
-
-
 
 
 

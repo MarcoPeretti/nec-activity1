@@ -21,7 +21,7 @@
 
 ### Part 2: Implement Neural Networks
 
-- [ ] **Implement Back-propagation neural network from scratch**
+- [x] **Implement Back-propagation neural network from scratch**
 
 ---
 

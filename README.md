@@ -1,5 +1,11 @@
 # nec-activity1
 
+## 20.11.2025
+
+**Update:** Updated data management
+
+- The generated pre-processed datasets in notebook 1 are stored in the data folder and re-used by the other notebooks. This way, we are not re-generating datasets everytime a notebook is executed
+
 ## 18.11.2025
 
 **Update:** Created new folder structure. data - models - notebook

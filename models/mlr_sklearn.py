@@ -33,9 +33,9 @@ class MultipleLinearRegressionSK:
         print("Multiple Linear Regression (scikit-learn) initialized.")
         print("fit_intercept:", self.fit_intercept)
 
-    # --------------------------
+    
     # Training function
-    # --------------------------
+  
     def fit(self, X, Z):
         """
         Train the multiple linear regression model.
@@ -53,9 +53,9 @@ class MultipleLinearRegressionSK:
         # Train the internal scikit-learn model
         self.model.fit(X, Z)
 
-    # --------------------------
+    
     # Prediction function
-    # --------------------------
+    
     def predict(self, X):
         """
         Compute predictions for new input data.
@@ -76,9 +76,9 @@ class MultipleLinearRegressionSK:
         # Ensure output is a NumPy array
         return np.asarray(Z_pred)
 
-    # --------------------------
+    
     # Access learned coefficients
-    # --------------------------
+    
     @property
     def coef_(self):
         """Return the learned regression coefficients."""
@@ -90,17 +90,9 @@ class MultipleLinearRegressionSK:
         return self.model.intercept_
 
 
-# ----------------------------------------------------------
+
 # Documentation and resources used as reference:
-#
-# - scikit-learn LinearRegression class:
-#   https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html
-#
-# - scikit-learn User Guide — Linear Models:
-#   https://scikit-learn.org/stable/modules/linear_model.html
-#
-# These sources were used as a base for:
-# - understanding the LinearRegression API (fit, predict, coef_, intercept_)
-# - confirming expected input/output shapes
-# - following standard scikit-learn practices for regression.
-# ----------------------------------------------------------
+# - https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html
+# - https://scikit-learn.org/stable/modules/linear_model.html
+
+

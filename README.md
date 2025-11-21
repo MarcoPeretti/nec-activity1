@@ -1,5 +1,11 @@
 # nec-activity1
 
+## 21.11.2025
+
+- modified .gitignore to skip saving generated data files
+- added L1 and L2 Regularisations to neuralnet_torch.py
+- modified A1_3_MLR_and_Pytorch_Comparison.ipynb and added L0/L1/L2 parameter to fit (work in progress)
+
 ## 20.11.2025
 
 **Update:** Updated data management
@@ -11,104 +17,132 @@
 **Update:** Created new folder structure. data - models - notebook
 
 - Under notebooks there are three documents:
-    1. Pre processing
-    2. Execution of hte BP from scratch
-    3. Execution of BP PyTorch and MLR
-    Disclaimer: Part of the pre process, such as scaling is repeated on the three notebooks. We plan to do a future refactor where we can reuse the scaled data in roder to repeat that part of the process on each execution.
-
+  1. Pre processing
+  2. Execution of hte BP from scratch
+  3. Execution of BP PyTorch and MLR
+     Disclaimer: Part of the pre process, such as scaling is repeated on the three notebooks. We plan to do a future refactor where we can reuse the scaled data in roder to repeat that part of the process on each execution.
 
 # Neural Network Debugging & Improvement Log
+
 # Date: 16 November 2025
 
-----------------------------------------------------------
+---
+
 1. Initial Issue: MLP error stuck around ~14–15
-----------------------------------------------------------
+
+---
+
 - The multi-layer network (tanh/sigmoid) showed no learning.
 - Training error barely moved across epochs.
 - Hyperparameter tuning (lr, momentum, hidden sizes) had no effect.
 
-----------------------------------------------------------
+---
+
 2. Hypothesis #1: Weight Initialization Too Large
-----------------------------------------------------------
+
+---
+
 - Original weights were in range (-1, 1).
 - Caused activation saturation → gradients ~0.
 - FIX: reduce initialization scale to (-0.1, 0.1).
 - RESULT: no more overflow, but MLP still not learning.
 
-----------------------------------------------------------
+---
+
 3. Sanity Check: Train a Simple Linear Model
-----------------------------------------------------------
+
+---
+
 - Model: [61, 1], activation = linear.
 - RESULT: trained perfectly (Val MSE ≈ 0.20).
 - CONCLUSION: Backprop for single-layer networks works.
 
-----------------------------------------------------------
+---
+
 4. Sanity Check #2: Deep Network but Fully Linear
-----------------------------------------------------------
+
+---
+
 - Model: [61, 40, 15, 1], activation = linear.
 - RESULT: learned correctly (Val MSE ≈ 0.35).
 - CONCLUSION: Multi-layer backprop also works.
 - PROBLEM ONLY HAPPENS WITH NON-LINEAR ACTIVATIONS.
 
-----------------------------------------------------------
+---
+
 5. Hypothesis #2: Wrong Output Activation for Regression
-----------------------------------------------------------
+
+---
+
 - Originally, output layer used same activation as hidden layers.
 - This is incompatible with continuous regression targets.
-- FIX: hidden layers use user-selected activation; 
-       output layer always uses linear activation.
+- FIX: hidden layers use user-selected activation;
+  output layer always uses linear activation.
 - RESULT: still no improvement; MLP MSE remained ≈ 14.
 
-----------------------------------------------------------
+---
+
 6. Critical Discovery: Target `y` Was Not Scaled
-----------------------------------------------------------
+
+---
+
 - `cnt_log` ranges approx from 0 to 6.
 - Non-linear activations (tanh/sigmoid) output in (-1, 1) or (0, 1).
 - This mismatch caused:
-    - output saturation,
-    - vanishing gradients,
-    - error plateau near 14.
+  - output saturation,
+  - vanishing gradients,
+  - error plateau near 14.
 - FIX: apply StandardScaler to the target y (train/val/test).
 - Train model on scaled y, inverse-transform predictions afterward.
 
-----------------------------------------------------------
+---
+
 7. Result After Scaling Target `y`
-----------------------------------------------------------
+
+---
+
 MLP with non-linear activation (tanh) finally learned:
-    Train MSE: 0.279
-    Val   MSE: 0.606
-    Test  MSE: 0.704
+Train MSE: 0.279
+Val MSE: 0.606
+Test MSE: 0.704
 
 Huge improvement from previous MSE ~14.
 
-----------------------------------------------------------
+---
+
 8. Additional Insight: Activation Functions
-----------------------------------------------------------
+
+---
+
 - After scaling y and fixing output activation:
-    - tanh works well.
-    - sigmoid also works correctly again.
+  - tanh works well.
+  - sigmoid also works correctly again.
 - Problem was activation saturation caused by target scale mismatch.
 
-----------------------------------------------------------
+---
+
 9. Final Architecture Rules
-----------------------------------------------------------
+
+---
+
 - Hidden layers: tanh / sigmoid / relu allowed.
 - Output layer: always linear for regression.
 - Inputs: StandardScaler (already applied).
 - Target y: StandardScaler (new and essential).
 
-----------------------------------------------------------
+---
+
 10. Final Conclusion
-----------------------------------------------------------
+
+---
+
 - Backpropagation implementation is correct.
 - The key issues were:
-    1. overly large weight initialization,
-    2. wrong output activation for regression,
-    3. missing target scaling.
+  1. overly large weight initialization,
+  2. wrong output activation for regression,
+  3. missing target scaling.
 - After fixes, MLP now learns and generalizes correctly.
 - Ready for hyperparameter experiments and reporting.
-
-
 
 ## 13.11.2025
 

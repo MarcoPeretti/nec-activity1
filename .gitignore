@@ -22,3 +22,6 @@ build/
 
 # Logs
 *.log
+
+data/*.npy
+data/*.joblib

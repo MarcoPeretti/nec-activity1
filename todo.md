@@ -29,29 +29,29 @@
 
 #### 3.1 Hyperparameter Comparison and Selection
 
-- [ ] Explore ≥ 10 different **hyperparameter combinations**:
+- [x] Explore ≥ 10 different **hyperparameter combinations**:
   - Number of layers
   - Layer structure
   - Epochs
   - Learning rate
   - Momentum
   - Activation function
-- [ ] For each combination:
-  - [ ] Compute metrics: **MAPE**, **MAE**, **MSE**.
-  - [ ] Record in a summary **table**.
-  - [ ] Plot 2–3 **scatter plots** (predicted vs real values).
-  - [ ] Plot 2–3 **error evolution plots** (training vs validation error).
+- [x] For each combination:
+  - [x] Compute metrics: **MAPE**, **MAE**, **MSE**.
+  - [x] Record in a summary **table**.
+  - [x] Plot 2–3 **scatter plots** (predicted vs real values).
+  - [x] Plot 2–3 **error evolution plots** (training vs validation error).
 - [ ] Write a **2–3 paragraph discussion** justifying chosen hyperparameters.
 
 #### 3.2 Model Result Comparison
 
-- [ ] Implement or use:
-  - [ ] **Multiple Linear Regression (MLR-F)** from scikit-learn.
-  - [ ] **Neural Network (BP-F)** using a library (TensorFlow/PyTorch/etc.).
-- [ ] Compare all three models (BP, BP-F, MLR-F):
-  - [ ] Describe parameters of each model.
-  - [ ] Present a **comparison table** (MAPE, MAE, MSE).
-  - [ ] Include **scatter plots** (predicted vs real) for each model.
+- [x] Implement or use:
+  - [x] **Multiple Linear Regression (MLR-F)** from scikit-learn.
+  - [x] **Neural Network (BP-F)** using a library (TensorFlow/PyTorch/etc.).
+- [x] Compare all three models (BP, BP-F, MLR-F):
+  - [x] Describe parameters of each model.
+  - [x] Present a **comparison table** (MAPE, MAE, MSE).
+  - [x] Include **scatter plots** (predicted vs real) for each model.
   - [ ] Write **2 discussion paragraphs** comparing performance and functionality.
 
 ---

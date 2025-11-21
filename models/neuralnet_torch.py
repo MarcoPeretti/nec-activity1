@@ -122,7 +122,7 @@ class NeuralNetTorch(nn.Module):
     
     # Training loop
     
-    def fit(self, X, Z):
+    def fit(self, X, Z, regularization_type=None, lambda_reg=1e-5):
         """
         Train the neural network.
 
@@ -171,14 +171,25 @@ class NeuralNetTorch(nn.Module):
         # 3) Main training loop
         for epoch in range(self.epochs):
 
-            # Reset gradients from previous step
-            self.optimizer.zero_grad()
-
             # Forward pass on training data
             output = self.forward(X_train)
 
             # Compute loss (MSE)
-            loss = self.criterion(output, Z_train)
+            mse = self.criterion(output, Z_train)
+            loss = mse.clone()  
+
+            # Apply L1 regularization
+            if regularization_type == 'L1':
+                l1_norm = sum(p.abs().sum() for p in self.model.parameters())
+                loss += lambda_reg * l1_norm
+            
+            # Apply L2 regularization
+            elif regularization_type == 'L2':
+                l2_norm = sum(p.pow(2).sum() for p in self.model.parameters())
+                loss += lambda_reg * l2_norm
+
+            # Reset gradients from previous step
+            self.optimizer.zero_grad()
 
             # Backpropagation: compute gradients
             loss.backward()

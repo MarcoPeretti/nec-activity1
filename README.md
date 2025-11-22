@@ -7,8 +7,8 @@ MESIIA 3 Master’s Degree in Computer Security Engineering and Artificial Intel
 
 Authors:
 
-- Marco Peretti
-- Juan Jose Milich Tear
+- [Marco Peretti](https://hr.linkedin.com/in/marcoperetti)
+- [Juan Jose Milich Tear](https://hr.linkedin.com/in/juan-milich-71255613)
 
 ## 22.11.2025
 

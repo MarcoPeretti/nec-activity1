@@ -1,7 +1,9 @@
 # nec-activity1
 
 ## 22.11.2025
-
+- Moved Regularisation experiment into own notebook
+- refactor some code and moved into utils folder
+- implemented dropout
 - Added CrossValidation
 - Added  text description and comments on the plits
 - Modified Notebooks A1_2 and A1_5 in order to utilize utils.py reference

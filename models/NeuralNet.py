@@ -18,7 +18,7 @@ class NeuralNet:
     - d_theta: list of arrays for the threshold/bias changes (δθ)
     - d_w_prev: list of matrices for previous weight changes (momentum)
     - d_theta_prev: list of arrays for previous threshold changes (momentum)
-    - fact: name of the activation function (only 'sigmoid' for now)
+    - fact: name of the activation function 
     """
 
     def __init__(self, n, fact='sigmoid', eta=0.1, alpha=0.9, epochs=1000, val_split=0.0):

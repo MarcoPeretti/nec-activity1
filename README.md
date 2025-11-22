@@ -1,5 +1,10 @@
 # nec-activity1
 
+## 22.11.2025
+- Moved Regularisation experiment into own notebook
+- refactor some code and moved into utils folder
+- implemented dropout
+
 ## 21.11.2025
 
 - modified .gitignore to skip saving generated data files

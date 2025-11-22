@@ -18,7 +18,7 @@ class NeuralNetTorch(nn.Module):
     - PyTorch takes care of gradients and weight updates.
     """
 
-    def __init__(self, n, fact='sigmoid', eta=0.1, alpha=0.9, epochs=1000, val_split=0.0):
+    def __init__(self, n, fact='sigmoid', eta=0.1, alpha=0.9, epochs=1000, val_split=0.0, dropout=0.0):
         """
         Initialize the neural network.
 
@@ -44,6 +44,9 @@ class NeuralNetTorch(nn.Module):
         val_split : float
             Fraction of the data used for validation.
             Example: 0.2 means 20% for validation.
+
+        dropout : float
+            0.0 means disabled
         """
 
         # Call parent constructor (required for nn.Module)
@@ -56,7 +59,7 @@ class NeuralNetTorch(nn.Module):
         self.alpha = alpha
         self.epochs = epochs
         self.val_split = val_split
-
+        self.dropout = dropout
         
         # Build the network architecture
        
@@ -80,7 +83,11 @@ class NeuralNetTorch(nn.Module):
                 elif fact == 'linear':
                     # No activation, pure linear layer
                     pass
-
+                    
+                # add dropout if > 0
+                if self.dropout > 0.0:
+                    layers.append(nn.Dropout(p=self.dropout))
+        
         # Wrap all layers into a single Sequential model
         self.model = nn.Sequential(*layers)
 
@@ -168,6 +175,9 @@ class NeuralNetTorch(nn.Module):
         self.train_errors = []
         self.val_errors = []
 
+        # Enable dropout
+        self.train() 
+        
         # 3) Main training loop
         for epoch in range(self.epochs):
 
@@ -239,6 +249,9 @@ class NeuralNetTorch(nn.Module):
         if isinstance(X, np.ndarray):
             X = torch.tensor(X, dtype=torch.float32)
 
+        # Disable Dropout
+        self.eval()
+        
         # In prediction, we do not need gradients
         with torch.no_grad():
             output = self.forward(X)

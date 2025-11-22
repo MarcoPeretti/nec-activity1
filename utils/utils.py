@@ -13,6 +13,7 @@ def predict_batch(model, X):
     return np.array([model.predict(x) for x in X]).reshape(-1, 1)
 
 
+
 def mape(y_true, y_pred):
     """
     Safe MAPE implementation (ignores zero targets).
@@ -43,3 +44,6 @@ def evaluate_regression(y_true, y_pred):
         "MAE":  float(mae_val),
         "MAPE": float(mape_val),
     }
+
+
+
